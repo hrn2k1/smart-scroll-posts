@@ -52,6 +52,7 @@ $ssp_settings['custom_markup'] =  "<article id='post-#postID' class='#post_class
 <p>#post_content</p></div>
 </div></article>";
 $ssp_settings['replace_url'] = "1";
+$ssp_settings['post_category_taxonomies'] = "category";
 $ssp_settings['post_limit'] = "";
 $ssp_settings['smart_scroll_ajax_image'] = 'default_loader';
 $ssp_settings['smart_scroll_ajax_image_url'] =  SSP_IMAGE_DIR. 'smart_scroll-ajax_loader.gif';

@@ -220,22 +220,27 @@ if( !class_exists( 'SSP_Smart_Scroll_Posts' ) ) {
          }
 
          function add_content_footer(){
+            $options = get_option( SSP_SETTINGS );
+            $post_category_taxonomies =  isset($options['post_category_taxonomies'])? $options['post_category_taxonomies'] : 'category';
             global $post;
             $post_id = $post->ID;
-            $category = get_the_category($post->ID);
-            if(empty($category)){
-             $category_id = '';
-            }else{
-              $category_idd =$category[0]->cat_ID;            
-              $category_id = $category_idd;
-            }
+            $post_type = $post->post_type;
+            $taxonomy = '';
+            $category_id = '';
+            $post_terms = wp_get_post_terms($post_id, explode(',', $post_category_taxonomies));
+            if(count($post_terms) > 0){
+              $taxonomy = $post_terms[0]->taxonomy;
+              $category_id = $post_terms[0]->term_id;
+            }           
             echo '<input type="hidden" id="ssp_main_postid" value="'.$post_id.'"/>';
+            echo '<input type="hidden" id="ssp_main_taxonomy" value="'. $taxonomy .'"/>';
             echo '<input type="hidden" id="ssp_main_cateid" value="'. $category_id .'"/>';
+            echo '<input type="hidden" id="ssp_main_post_type" value="'. $post_type .'"/>';
 
          } 
 
 
-        function get_previous_post_id( $post_id,$in_same_term ,$posttypee ) {
+        function get_previous_post_id( $post_id, $taxonomy, $in_same_term ,$posttypee ) {
             // Get a global post reference since get_adjacent_post() references it
             global $post;
             // Store the existing post object for later so we don't lose it
@@ -244,9 +249,9 @@ if( !class_exists( 'SSP_Smart_Scroll_Posts' ) ) {
             $post = get_post( $post_id );
             // Get the post object for the previous post
             if($posttypee == "newer_posts"){
-               $previous_post = get_next_post($in_same_term);
+               $previous_post = get_next_post($in_same_term, '', $taxonomy);
             }else{
-              $previous_post = get_previous_post($in_same_term);
+              $previous_post = get_previous_post($in_same_term, '', $taxonomy);
             }
             
             // Reset our global object
@@ -259,22 +264,25 @@ if( !class_exists( 'SSP_Smart_Scroll_Posts' ) ) {
 
       /* Default and Custom Template ajax call */
         function ssp_populate_posts(){
-       if ( !empty( $_POST ) && wp_verify_nonce( $_POST['_wpnonce'], 'ssp-ajax-nonce' ) ) {
+        if ( !empty( $_POST ) && wp_verify_nonce( $_POST['_wpnonce'], 'ssp-ajax-nonce' ) ) {
             if (!isset($_POST['ID']))
               die();
 
               $post_id       = sanitize_text_field($_POST['ID']);
               $markup        = sanitize_text_field($_POST['markup_type']);
+              $taxonomy  = sanitize_text_field($_POST['taxonomy']);
               $in_same_term  = sanitize_text_field($_POST['catid']);
+              $post_type  = sanitize_text_field($_POST['post_type']);
               $nextpoststype = sanitize_text_field($_POST['order_next_posts']);
 
               $post_link_target = (isset($_POST['post_link_target'])?sanitize_text_field($_POST['post_link_target']):'_self');
               $posts_featured_size = (isset($_POST['posts_featured_size'])?sanitize_text_field($_POST['posts_featured_size']):'large');
-
-              $post_id      = $this->get_previous_post_id( $post_id, $in_same_term , $nextpoststype );
+              
+              $post_id      = $this->get_previous_post_id($post_id, $taxonomy, $in_same_term , $nextpoststype );
               if($post_id){
                   $args     = array(
-                    'p'     =>  $post_id
+                    'p'     =>  $post_id,
+                    'post_type'=> $post_type
                     );
               $query = new WP_Query($args);
               while ( $query->have_posts() ) : $query->the_post();

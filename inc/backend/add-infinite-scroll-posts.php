@@ -124,6 +124,16 @@
 							 </div>
 				          </td>
 				       </tr>
+                       <tr> 
+				         <td width="200"><label class="display"><?php _e('Post Category Taxonomies', 'smart-scroll-posts'); ?></label></td>
+				         <td>
+				         	 <div class="ssp-field">
+                                <?php $post_category_taxonomies = ( isset( $options['post_category_taxonomies'] ) ) ? $options['post_category_taxonomies'] : 'category'; ?>
+                                  <input type="text" name="post_category_taxonomies"  value="<?php echo esc_attr( $post_category_taxonomies ); ?>"/>
+                                  <br/><span class="default_smart_value"> <?php _e('Comma seperated taxonomy names. The terms under these taxonomy names will be used for post category', 'smart-scroll-posts'); ?> </span>                    
+                                 </div>
+				          </td>
+				       </tr>
                         <tr> 
 				         <td width="200"><label class="display"><?php _e('Posts Limit', 'smart-scroll-posts'); ?></label></td>
 				         <td>

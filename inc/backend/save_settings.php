@@ -4,6 +4,7 @@ $ssp_settings  = array();
 $load_ajax_type  = sanitize_text_field($_POST['load_ajax_type']);
 $main_container  = sanitize_text_field($_POST['main_container_class']);
 $elementid       = sanitize_text_field($_POST['set_ajax_container_class']);
+$post_category_taxonomies = sanitize_text_field($_POST['post_category_taxonomies']);
 $post_limit       = sanitize_text_field($_POST['post_limit']);
 if(empty($elementid)){
 	$ajax_container = 'smart_ajax_container';
@@ -77,6 +78,7 @@ $ssp_settings['category_options']            = $category_options;
 
 
 $ssp_settings['smart_scroll_ajax_image']     = $ajax_img_type;
+$ssp_settings['post_category_taxonomies']    = $post_category_taxonomies;
 $ssp_settings['post_limit']     = $post_limit;
 $ssp_settings['ssp_default_loader']     = sanitize_text_field($_POST['ssp_default_loader']);
 $ssp_settings['smart_scroll_ajax_image_url'] = $ajaxloader_useruploadimg;

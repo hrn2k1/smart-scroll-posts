@@ -20,7 +20,9 @@ var postperpage          = ssp_frontend_js_params.smartscroll_posts_limit;
 var postsajax = [];
 jQuery.noConflict();
 jQuery(function($){
+  var taxonomy = $('#ssp_main_taxonomy').val();
   var categoryid = $('#ssp_main_cateid').val();
+  var post_type = $('#ssp_main_post_type').val();
   if(cat_options.indexOf(categoryid) >= 0 || cat_options.indexOf('all') >= 0) { 
     /*if(image_loader_ajax == '' || loadertype == 'default_loader'){
       image_loader_ajax = default_loader;
@@ -57,7 +59,7 @@ if ( (distance <= 91 && divHh <= 250 ) || ($(document).height() <= ( scrollTop +
               if(cat_options.indexOf(categoryid) >= 0 || cat_options.indexOf('all') >= 0) {     
                  if(postperpage != ''){
                  if(postsajax.length <= postperpage - 1){
-                    myssp_load_morefunc(post_id,categoryid);
+                    myssp_load_morefunc(post_id, taxonomy, categoryid, post_type);
                     postsajax.push(post_id);
                   }else{
                        $("#smart-ajax-loader").hide();
@@ -65,7 +67,7 @@ if ( (distance <= 91 && divHh <= 250 ) || ($(document).height() <= ( scrollTop +
                        $('.show_no_posts').show();
                   }
                  }else{
-                    myssp_load_morefunc(post_id,categoryid);
+                    myssp_load_morefunc(post_id, taxonomy, categoryid, post_type);
                  }
                     processing = false; 
 
@@ -85,14 +87,16 @@ if ( (distance <= 91 && divHh <= 250 ) || ($(document).height() <= ( scrollTop +
 
 
 
-	 function myssp_load_morefunc(value,categoryid){ 
+	 function myssp_load_morefunc(value,taxonomy, categoryid, post_type){ 
 
        $.ajax({
           type: 'POST',
           url: AjaxURL,
           data: {
-          	  'ID'          : value,
+              'ID'          : value,
+              'taxonomy'    : taxonomy,
               'catid'       : categoryid,
+              'post_type'   : post_type,
               'markup_type' : markup_type,
               'order_next_posts': order_next_posts,
               'post_link_target': post_link_target,
